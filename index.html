@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RolyPoly</title>
+    <script src="phaser.js"></script>
+    <script>
+        class Title extends Phaser.Scene {
+            constructor() {
+                super('title');
+            }
+            preload() {
+                this.load.path = './assets/';
+                this.load.image('Poly', 'RolyPoly.png');
+                this.load.image('Title', 'TitleText.png');
+                this.load.image('Start', 'TapToStart.png');
+
+            }
+            create() {
+                this.imageObject = this.add.image(
+                    340,
+                    240,
+                    'Poly',
+                )
+                this.imageObject.setScale(1.02);
+                this.imageObject = this.add.image(
+                    340,
+                    140,
+                    'Title',
+                )
+                this.imageObject.setScale(1.02);
+                let start = this.add.image(
+                    320,
+                    500,
+                    'Start',
+                )
+                .setInteractive()
+                .on('pointerdown',() => {
+                    this.scene.start('victory');
+                });
+                
+                this.tweens.add({
+                    targets: start,
+                    y: 350,
+                    duration: 2000,
+                    repeat: 0,
+                    hold: 500,
+                    repeatDelay: 500,
+                    ease: 'bounce.out'
+                });
+
+                this.imageObject.setScale(1.02);
+
+            }
+
+
+
+        }
+
+/*
+Title and Victory screen design: 
+The very first and very last things the player sees will have the strongest impressions on them. 
+Using your favorite asset creation tools, quickly assemble the title and victory screens of the game. 
+Assemble your scenes from a few visual layers that can move independently to guide the players attention to the key ideas: 
+the title, the themes, and (implicit) instructions for how to continue. You should probably do this with a giant responsive button 
+that feels natural to click rather than any text like "tap the screen to jump". Remember, most of your audience has very limited reading skills. 
+Tapping the screen should cycle between the two scenes you are prototyping.
+*/
+        class Victory extends Phaser.Scene {
+            constructor() {
+                super('victory');
+            }
+
+            preload() {
+                this.load.image('vic', 'assets/victory.png');
+                this.load.image('badge', 'assets/badge.png');
+            }
+
+            create() {
+                let finale = this.add.image(340, 240, 'vic')
+                    .setAlpha(0)
+                    .setInteractive()
+                    .on('pointerdown',() => {
+                    this.scene.start('title');
+                    });
+                let little = this.add.image(260, 300, 'badge')
+                    .setAlpha(0)
+                    .setScale(2);
+
+                this.tweens.add({
+                    targets: [finale, this.cameras.main],
+                    alpha: 1,
+                    duration: 3000,
+                    ease: 'Circ'
+                });
+
+                this.tweens.add({
+                    targets: little,
+                    scaleX: 0.5, // Final scale in the x-axis (small)
+                    scaleY: 0.5, // Final scale in the y-axis (small)
+                    alpha: 1,
+                    delay: 1000,
+                    duration: 1000,
+                    ease: 'Bounce'
+                })
+            }
+
+            update() {
+
+            }
+        }
+
+
+        new Phaser.Game({
+            width: 640,
+            height: 480,
+            scene: [Title,Victory],
+            backgroundColor: 0x1b0c26,
+        });
+
+
+    </script>
+
+</head>
+
+<body>
+
+</body>
+
+</html>
